@@ -5,6 +5,8 @@ app:
   env:
     - name: LLAMA_MODEL
       value: /goinfre/models/llama/13B/ggml-model-q4_0.bin
+    - name: DIRECTORY_PATH
+      value: /goinfre/data
   volumes:
     - name: goinfre
       csi:

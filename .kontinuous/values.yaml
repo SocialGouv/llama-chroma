@@ -23,6 +23,7 @@ app:
 
 chroma:
   ~chart: app
+  ~forceRestart: false
   image: ghcr.io/socialgouv/docker/chroma:0.3.21
   containerPort: 8000
   probesPath: /api/v1
@@ -30,6 +31,12 @@ chroma:
     initialDelaySeconds: 60
   ingress:
     enabled: false
+  volumes:
+    - name: tmp
+      emptyDir: {}
+  volumeMounts:
+    - name: tmp
+      mountPath: /index_data
 
 jobs:
   runs:

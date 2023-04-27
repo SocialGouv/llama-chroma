@@ -1,47 +1,75 @@
-import { LLama } from "llama-node";
-import { LLamaCpp, LoadConfig } from "llama-node/dist/llm/llama-cpp.js";
-import path from "path";
+import path from "path"
+import * as fs from "fs"
+import Fastify from "fastify"
+import { ChromaClient } from "chromadb"
 
-const model = path.resolve(process.cwd(), "./ggml-model-q4_0.bin");
+import markdownSplitter from "./markdown-splitter"
+import { getEmbeddings } from "./embedding"
 
-const llama = new LLama(LLamaCpp);
+const DIRECTORY_PATH = "./data"
 
-const config: LoadConfig = {
-    path: model,
-    enableLogging: true,
-    nCtx: 1024,
-    nParts: -1,
-    seed: 0,
-    f16Kv: false,
-    logitsAll: false,
-    vocabOnly: false,
-    useMlock: false,
-    embedding: false,
-    useMmap: true,
-};
+const fastify = Fastify({
+  logger: true,
+})
 
-llama.load(config);
+const client = new ChromaClient()
 
-const template = `How are you`;
+fastify.get("/", async (_request, reply) => {
+  const files = await getFiles()
+  console.log("files", files)
+  await addFilesToCollection(files)
+  reply.send({ indexedFiles: files.length })
+})
 
-const prompt = `### Human:
+fastify.listen({ port: 3000 }, (err) => {
+  if (err) throw err
+})
 
-${template}
+async function addFilesToCollection(files: string[]) {
+  for (const file of files) {
+    await addFileToCollection(file)
+  }
+}
 
-### Assistant:`;
+async function addFileToCollection(filePath: string) {
+  const collection = await client.getOrCreateCollection("test-collection")
+  const content = fs.readFileSync(filePath).toString()
+  const chunks = markdownSplitter(content)
+  const embeddings = await Promise.all(
+    chunks.map((chunk) => getEmbeddings(chunk.content))
+  )
 
-llama.createCompletion(
-    {
-        nThreads: 4,
-        nTokPredict: 2048,
-        topK: 40,
-        topP: 0.1,
-        temp: 0.2,
-        repeatPenalty: 1,
-        stopSequence: "### Human",
-        prompt,
-    },
-    (response) => {
-        process.stdout.write(response.token);
+  try {
+    await collection.add(
+      chunks.map((_file, i) => `${filePath}-${i}`),
+      embeddings,
+      chunks.map((file) => ({ path: filePath, type: file.type })),
+      chunks.map((file) => file.content)
+    )
+  } catch (e) {
+    console.log("error posting to chroma", e)
+  }
+
+  console.info(`${filePath}: added ${chunks.length} chunks`)
+  return {
+    content,
+    chunks,
+    path: filePath,
+  }
+}
+
+function getFiles() {
+  return readDirectoryRecursive(DIRECTORY_PATH)
+}
+
+function readDirectoryRecursive(directoryPath: string): string[] {
+  const files = fs.readdirSync(directoryPath)
+  return files.flatMap((file: string) => {
+    const filePath = path.join(directoryPath, file)
+    if (fs.statSync(filePath).isDirectory()) {
+      return readDirectoryRecursive(filePath)
+    } else {
+      return `${directoryPath}/${file}`
     }
-);
+  })
+}

@@ -26,6 +26,8 @@ chroma:
   image: ghcr.io/socialgouv/docker/chroma:0.3.21
   containerPort: 8000
   probesPath: /api/v1
+  startupProbe:
+    initialDelaySeconds: 60
   ingress:
     enabled: false
 

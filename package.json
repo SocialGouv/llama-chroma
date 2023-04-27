@@ -1,0 +1,18 @@
+{
+  "type": "module",
+  "name": "llama-embedding",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@llama-node/llama-cpp": "^0.0.30",
+    "llama-node": "^0.0.30"
+  },
+  "devDependencies": {
+    "@types/node": "18.16.1",
+    "typescript": "5.0.4"
+  }
+}

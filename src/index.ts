@@ -10,6 +10,7 @@ const fastify = Fastify({
 })
 
 fastify.get("/indexing", Indexing)
+fastify.get("/healtz", async () => ({ success: true }))
 
 fastify.listen({ port: 3000 }, (err) => {
   if (err) throw err

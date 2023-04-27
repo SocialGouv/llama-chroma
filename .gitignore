@@ -128,3 +128,12 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# VSCode
+.vscode
+
+# Llama models
+model.bin
+
+# Test data folder
+data/

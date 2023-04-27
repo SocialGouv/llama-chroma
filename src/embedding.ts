@@ -1,30 +1,28 @@
-import { LLama } from "llama-node";
-import { LLamaCpp, LoadConfig } from "llama-node/dist/llm/llama-cpp.js";
-import path from "path";
+import path from "path"
+import { LLama } from "llama-node"
+import { LLamaCpp, LoadConfig } from "llama-node/dist/llm/llama-cpp.js"
 
-const model = path.resolve(process.cwd(), "./ggml-model-q4_0.bin");
-
-const llama = new LLama(LLamaCpp);
+const llama = new LLama(LLamaCpp)
+const model = path.resolve(process.cwd(), "./model.bin")
 
 const config: LoadConfig = {
-    path: model,
-    enableLogging: true,
-    nCtx: 1024,
-    nParts: -1,
-    seed: 0,
-    f16Kv: false,
-    logitsAll: false,
-    vocabOnly: false,
-    useMlock: false,
-    embedding: true,
-    useMmap: true,
-};
+  path: model,
+  enableLogging: true,
+  nCtx: 1024,
+  nParts: -1,
+  seed: 0,
+  f16Kv: false,
+  logitsAll: false,
+  vocabOnly: false,
+  useMlock: false,
+  embedding: true,
+  useMmap: true,
+}
 
-llama.load(config);
+llama.load(config)
 
-const prompt = `Who is the president of the United States?`;
-
-const params = {
+export async function getEmbeddings(prompt: string) {
+  const params = {
     nThreads: 4,
     nTokPredict: 2048,
     topK: 40,
@@ -32,6 +30,7 @@ const params = {
     temp: 0.2,
     repeatPenalty: 1,
     prompt,
-};
+  }
 
-llama.getEmbedding(params).then(console.log);
+  return llama.getEmbedding(params)
+}

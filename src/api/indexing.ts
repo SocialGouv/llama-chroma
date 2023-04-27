@@ -6,7 +6,11 @@ import { getEmbeddings } from "../lib/llama"
 import markdownSplitter from "../lib/markdown-splitter"
 import readDirectoryRecursive from "../lib/read-directory-recursive"
 
-const client = new ChromaClient()
+if (!process.env.CHROMA_URL) {
+  throw new Error("process.env.CHROMA_URL is undefined")
+}
+
+const client = new ChromaClient(process.env.CHROMA_URL)
 
 async function addFileToCollection(filePath: string) {
   const collection = await client.getOrCreateCollection("test-collection")

@@ -7,6 +7,7 @@ Add a `.env` like so:
 ```shell
 DIRECTORY_PATH=./data
 LLAMA_MODEL=./model.bin
+CHROMA_URL=http://localhost:8000
 ```
 
 #### Data directory

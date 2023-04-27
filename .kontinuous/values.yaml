@@ -6,7 +6,7 @@ app:
     initialDelaySeconds: 60
   resources:
     requests:
-      memory: "8Gi"
+      memory: "10Gi"
       cpu: 1
     limits:
       memory: "16Gi"

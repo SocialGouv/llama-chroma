@@ -3,6 +3,7 @@
 ### Set up
 
 #### Environment variables
+Add a `.env` like so:
 ```shell
 DIRECTORY_PATH=./data
 LLAMA_MODEL=./model.bin

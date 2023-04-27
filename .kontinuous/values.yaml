@@ -1,0 +1,24 @@
+app:
+  containerPort: 3000
+  ~needs: [build-app]
+  probesPath: /api/healthz
+  volumes:
+    - name: goinfre
+      csi:
+        driver: file.csi.azure.com
+        readOnly: false
+        volumeAttributes:
+          secretName: azure-sre-goinfre-volume
+          shareName: goinfre
+  volumeMounts:
+    - name: goinfre
+      mountPath: /goinfre
+
+jobs:
+  runs:
+    build-app:
+      use: build
+      with:
+        imagePackage: app
+        buildArgs:
+          COMMIT_SHA: "{{ $.Values.global.sha }}"

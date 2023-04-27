@@ -8,7 +8,7 @@ app:
       cpu: 1
     limits:
       memory: "16Gi"
-      cpu: 4
+      cpu: 8
   env:
     - name: LLAMA_MODEL
       value: /goinfre/models/llama/13B/ggml-model-q4_0.bin

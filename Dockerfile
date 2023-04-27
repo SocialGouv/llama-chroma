@@ -1,3 +1,8 @@
-FROM bash:5.1-alpine3.17
+FROM node:16-alpine
 
-CMD ["sleep", "60000"]
+WORKDIR /app
+
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile && yarn build && yarn --production && yarn cache clean
+
+CMD ["yarn", "start"]

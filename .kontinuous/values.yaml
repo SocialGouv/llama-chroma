@@ -2,6 +2,8 @@ app:
   containerPort: 3000
   ~needs: [build-app]
   probesPath: /api/healthz
+  startupProbe:
+    initialDelaySeconds: 60
   resources:
     requests:
       memory: "8Gi"

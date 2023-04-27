@@ -7,6 +7,8 @@ app:
       value: /goinfre/models/llama/13B/ggml-model-q4_0.bin
     - name: DIRECTORY_PATH
       value: /goinfre/data
+    - name: CHROMA_URL
+      value: http://chroma
   volumes:
     - name: goinfre
       csi:
@@ -20,10 +22,12 @@ app:
       mountPath: /goinfre
 
 chroma:
+  ~chart: app
   image: ghcr.io/socialgouv/docker/chroma:0.3.21
   containerPort: 8000
   probesPath: /api/v1
-
+  ingress:
+    enabled: false
 
 jobs:
   runs:

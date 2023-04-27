@@ -1,47 +1,17 @@
-import { LLama } from "llama-node";
-import { LLamaCpp, LoadConfig } from "llama-node/dist/llm/llama-cpp.js";
-import path from "path";
+import micri, { Router, send, text } from "micri";
 
-const model = path.resolve(process.cwd(), "./ggml-model-q4_0.bin");
+const { router, on, otherwise } = Router
 
-const llama = new LLama(LLamaCpp);
-
-const config: LoadConfig = {
-    path: model,
-    enableLogging: true,
-    nCtx: 1024,
-    nParts: -1,
-    seed: 0,
-    f16Kv: false,
-    logitsAll: false,
-    vocabOnly: false,
-    useMlock: false,
-    embedding: false,
-    useMmap: true,
-};
-
-llama.load(config);
-
-const template = `How are you`;
-
-const prompt = `### Human:
-
-${template}
-
-### Assistant:`;
-
-llama.createCompletion(
-    {
-        nThreads: 4,
-        nTokPredict: 2048,
-        topK: 40,
-        topP: 0.1,
-        temp: 0.2,
-        repeatPenalty: 1,
-        stopSequence: "### Human",
-        prompt,
-    },
-    (response) => {
-        process.stdout.write(response.token);
-    }
-);
+micri(router(
+  on.get(
+    (req) => req.url === '/indexing',
+    (req, _res) => ({ message: 'Hello world!'})
+  ),
+  on.post(
+    (req) => req.url === '/',
+    (req) => text(req)
+  ),
+  otherwise(
+    (req, res) => send(res, 400, 'Method Not Accepted')))
+  )
+  .listen(3000);

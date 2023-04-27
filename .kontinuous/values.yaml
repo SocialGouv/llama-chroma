@@ -3,7 +3,7 @@ app:
   ~needs: [build-app]
   probesPath: /api/healthz
   startupProbe:
-    initialDelaySeconds: 180
+    initialDelaySeconds: 300
   resources:
     requests:
       memory: "10Gi"

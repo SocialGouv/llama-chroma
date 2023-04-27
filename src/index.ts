@@ -14,7 +14,7 @@ fastify.get("/api/healthz", async () => ({ success: true }))
 
 const port = parseInt(process.env.PORT || "") || 3000
 
-fastify.listen({ port }, (err) => {
+fastify.listen({ port, host: "0.0.0.0" }, (err) => {
   if (err) throw err
   console.log(`✅ API running on port ${port}`)
 })

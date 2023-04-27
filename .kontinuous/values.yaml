@@ -3,6 +3,9 @@ app:
   ~needs: [build-app]
   probesPath: /api/healthz
   resources:
+    requests:
+      memory: "8Gi"
+      cpu: 1
     limits:
       memory: "16Gi"
       cpu: 4
@@ -31,10 +34,6 @@ chroma:
   image: ghcr.io/socialgouv/docker/chroma:0.3.21
   containerPort: 8000
   probesPath: /api/v1
-  resources:
-    limits:
-      memory: "16Gi"
-      cpu: 4
   startupProbe:
     initialDelaySeconds: 60
   ingress:

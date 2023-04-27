@@ -2,6 +2,9 @@ app:
   containerPort: 3000
   ~needs: [build-app]
   probesPath: /api/healthz
+  env:
+    - name: LLAMA_MODEL
+      value: /goinfre/models/llama/13B/ggml-model-q4_0.bin
   volumes:
     - name: goinfre
       csi:
@@ -13,6 +16,12 @@ app:
   volumeMounts:
     - name: goinfre
       mountPath: /goinfre
+
+chroma:
+  image: ghcr.io/socialgouv/docker/chroma:0.3.21
+  containerPort: 8000
+  probesPath: /api/v1
+
 
 jobs:
   runs:

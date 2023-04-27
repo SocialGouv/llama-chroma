@@ -1,3 +1,5 @@
+global:
+  rancherProjectId: "c-5rj5b:p-wv7q8"
 app:
   containerPort: 3000
   ~needs: [build-app]

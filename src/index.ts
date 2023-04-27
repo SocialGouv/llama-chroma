@@ -12,9 +12,9 @@ const fastify = Fastify({
 fastify.get("/api/indexing", Indexing)
 fastify.get("/api/healthz", async () => ({ success: true }))
 
-const port = process.env.PORT || 3000
+const port = parseInt(process.env.PORT || "") || 3000
 
-fastify.listen(port, (err) => {
+fastify.listen({ port }, (err) => {
   if (err) throw err
   console.log(`✅ API running on port ${port}`)
 })

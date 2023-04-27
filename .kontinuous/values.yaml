@@ -1,7 +1,7 @@
 app:
   containerPort: 3000
   ~needs: [build-app]
-  probesPath: /healthz
+  probesPath: /api/healthz
   volumes:
     - name: goinfre
       csi:

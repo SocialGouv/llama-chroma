@@ -37,3 +37,10 @@ git clone git@github.com:chroma-core/chroma.git
 cd chroma
 docker-compose up -d --build
 ```
+
+### Test
+
+#### Call /api/indexing
+```shell
+curl localhost:3000/api/indexing -v
+```

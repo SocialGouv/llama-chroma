@@ -14,6 +14,9 @@ fastify.get("/api/indexing", Indexing)
 fastify.get("/api/embeddings/:text", Embeddings)
 fastify.get("/api/healthz", async () => ({ success: true }))
 
-fastify.listen({ port: 3000 }, (err) => {
+const port = parseInt(process.env.PORT || "") || 3000
+
+fastify.listen({ port, host: "0.0.0.0" }, (err) => {
   if (err) throw err
+  console.log(`✅ API running on port ${port}`)
 })

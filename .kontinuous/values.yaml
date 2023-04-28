@@ -2,6 +2,22 @@ app:
   containerPort: 3000
   ~needs: [build-app]
   probesPath: /api/healthz
+  startupProbe:
+    initialDelaySeconds: 200
+  resources:
+    requests:
+      memory: "10Gi"
+      cpu: 1
+    limits:
+      memory: "16Gi"
+      cpu: 8
+  env:
+    - name: LLAMA_MODEL
+      value: /goinfre/models/llama/13B/ggml-model-q4_0.bin
+    - name: DIRECTORY_PATH
+      value: /goinfre/data/socialgouv-support
+    - name: CHROMA_URL
+      value: http://chroma
   volumes:
     - name: goinfre
       csi:
@@ -13,6 +29,23 @@ app:
   volumeMounts:
     - name: goinfre
       mountPath: /goinfre
+
+chroma:
+  ~chart: app
+  ~forceRestart: false
+  image: ghcr.io/socialgouv/docker/chroma:0.3.21
+  containerPort: 8000
+  probesPath: /api/v1
+  startupProbe:
+    initialDelaySeconds: 60
+  ingress:
+    enabled: false
+  volumes:
+    - name: tmp
+      emptyDir: {}
+  volumeMounts:
+    - name: tmp
+      mountPath: /index_data
 
 jobs:
   runs:

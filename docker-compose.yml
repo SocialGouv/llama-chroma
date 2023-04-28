@@ -4,12 +4,15 @@ version: '3.0'
 services:
   chroma:
     image: ghcr.io/socialgouv/docker/chroma:0.3.21
-    # ports: 
-    #   - 8000:8000
+    ports: 
+      - 8000:8000
     volumes:
       - index_data:/index_data
     healthcheck:
       test: "curl http://127.0.0.1:8000/api/v1"
+      interval: 30s
+      timeout: 10s
+      retries: 5
   api:
     depends_on:
       chroma:
@@ -19,10 +22,10 @@ services:
       dockerfile: Dockerfile
     environment:
       LLAMA_MODEL: /goinfre/models/llama/13B/ggml-model-q4_0.bin
-      DIRECTORY_PATH: /goinfre/data/socialgouv-support
+      DIRECTORY_PATH: /goinfre/data/test1
       CHROMA_URL: http://chroma:8000
     volumes:
-      - /goinfre:/goinfre
+      - ../goinfre:/goinfre
     ports:
       - 3000:3000
 

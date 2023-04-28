@@ -12,7 +12,7 @@ const fastify = Fastify({
 })
 
 fastify.get("/api/indexing", Indexing)
-fastify.get("/api/query/:query", Query)
+fastify.get("/api/query", Query)
 fastify.get("/api/embeddings", Embeddings)
 fastify.get("/api/healthz", async () => ({ success: true }))
 

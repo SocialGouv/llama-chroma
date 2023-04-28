@@ -10,7 +10,7 @@ export default async function Embeddings(
   request: FastifyRequest,
   reply: FastifyReply
 ) {
-  const { text } = request.params as Record<string, string>
+  const { text } = request.query as Record<string, string>
   const embeddings = await getEmbeddings(text)
   reply.send({ embeddings })
 }

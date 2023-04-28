@@ -13,7 +13,7 @@ const fastify = Fastify({
 
 fastify.get("/api/indexing", Indexing)
 fastify.get("/api/query/:query", Query)
-fastify.get("/api/embeddings/:text", Embeddings)
+fastify.get("/api/embeddings", Embeddings)
 fastify.get("/api/healthz", async () => ({ success: true }))
 
 const port = parseInt(process.env.PORT || "") || 3000

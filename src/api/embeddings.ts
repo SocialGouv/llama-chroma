@@ -11,6 +11,6 @@ export default async function Embeddings(
   reply: FastifyReply
 ) {
   const { text } = request.params as Record<string, string>
-  const embeddings = getEmbeddings(text)
+  const embeddings = await getEmbeddings(text)
   reply.send({ embeddings })
 }

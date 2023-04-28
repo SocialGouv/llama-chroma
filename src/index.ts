@@ -3,6 +3,7 @@ dotenv.config()
 
 import Fastify from "fastify"
 
+import Query from "./api/query"
 import Indexing from "./api/indexing"
 import Embeddings from "./api/embeddings"
 
@@ -11,6 +12,7 @@ const fastify = Fastify({
 })
 
 fastify.get("/api/indexing", Indexing)
+fastify.get("/api/query/:query", Query)
 fastify.get("/api/embeddings/:text", Embeddings)
 fastify.get("/api/healthz", async () => ({ success: true }))
 

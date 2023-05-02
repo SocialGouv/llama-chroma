@@ -6,6 +6,7 @@ import Fastify from "fastify"
 import Query from "./api/query"
 import Indexing from "./api/indexing"
 import Embeddings from "./api/embeddings"
+import DeleteCollection from "./api/delete-collection"
 
 const fastify = Fastify({
   logger: true,
@@ -14,6 +15,7 @@ const fastify = Fastify({
 fastify.get("/api/indexing", Indexing)
 fastify.get("/api/query", Query)
 fastify.get("/api/embeddings", Embeddings)
+fastify.get("/api/delete-collection", DeleteCollection)
 fastify.get("/api/healthz", async () => ({ success: true }))
 
 const port = parseInt(process.env.PORT || "") || 3000

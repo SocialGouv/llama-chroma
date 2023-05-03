@@ -7,13 +7,15 @@ import Query from "./api/query"
 import Indexing from "./api/indexing"
 import Embeddings from "./api/embeddings"
 import DeleteCollection from "./api/delete-collection"
+import Info from "./api/info"
 
 const fastify = Fastify({
   logger: true,
 })
 
-fastify.get("/api/indexing", Indexing)
+fastify.get("/api/info", Info)
 fastify.get("/api/query", Query)
+fastify.get("/api/indexing", Indexing)
 fastify.get("/api/embeddings", Embeddings)
 fastify.get("/api/delete-collection", DeleteCollection)
 fastify.get("/api/healthz", async () => ({ success: true }))

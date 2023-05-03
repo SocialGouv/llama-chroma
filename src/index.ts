@@ -17,7 +17,7 @@ fastify.get("/api/info", Info)
 fastify.get("/api/query", Query)
 fastify.get("/api/indexing", Indexing)
 fastify.get("/api/embeddings", Embeddings)
-fastify.get("/api/delete-collection", DeleteCollection)
+fastify.delete("/api/collection", DeleteCollection)
 fastify.get("/api/healthz", async () => ({ success: true }))
 
 const port = parseInt(process.env.PORT || "") || 3000

@@ -1,3 +1,30 @@
+## API
+
+#### Index data
+```
+GET /api/indexing
+```
+
+#### Get text embeddings
+```
+GET /api/embeddings?text=hello
+```
+
+#### Get related data from query
+```
+GET /api/query?text=hello
+```
+
+#### Get collection information
+```
+GET /api/info
+```
+
+#### Delete collection
+```
+DELETE /api/collection
+```
+
 ## Development
 
 ### Set up

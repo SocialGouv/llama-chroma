@@ -21,6 +21,6 @@ export default async function Query(
     collectionName || process.env.DEFAULT_COLLECTION || ""
   )
   const embeddings = await getEmbeddings(text)
-  const result = collection.query(embeddings, 5, undefined, [text])
+  const result = await collection.query(embeddings, 5)
   reply.send({ result })
 }

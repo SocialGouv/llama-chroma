@@ -25,13 +25,13 @@ async function addFileToCollection(filePath: string, collection: Collection) {
   console.log(
     `3/4 - File "${filePath}" has generated ${embeddings.length} embeddings.`
   )
+
+  const documents = chunks.map((file) => file.content)
+  const ids = chunks.map((_file, i) => `${filePath}-${i}`)
+  const metadata = chunks.map((file) => ({ path: filePath, type: file.type }))
+
   try {
-    await collection.add(
-      chunks.map((_file, i) => `${filePath}-${i}`),
-      embeddings,
-      chunks.map((file) => ({ path: filePath, type: file.type })),
-      chunks.map((file) => file.content)
-    )
+    await collection.add(ids, embeddings, metadata, documents)
   } catch (e) {
     console.log("error posting to chroma", e)
   }

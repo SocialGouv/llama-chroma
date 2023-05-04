@@ -13,12 +13,18 @@ if (!process.env.CHROMA_URL) {
 const client = new ChromaClient(process.env.CHROMA_URL)
 
 async function addFileToCollection(filePath: string, collection: Collection) {
+  console.log(`1/4 - Start processing file"${filePath}"`)
   const content = fs.readFileSync(filePath).toString()
   const chunks = markdownSplitter(content)
+  console.log(
+    `2/4 - File "${filePath}" has been splitted in ${chunks.length} chunks.`
+  )
   const embeddings = await Promise.all(
     chunks.map((chunk) => getEmbeddings(chunk.content))
   )
-
+  console.log(
+    `3/4 - File "${filePath}" has generated ${embeddings.length} embeddings.`
+  )
   try {
     await collection.add(
       chunks.map((_file, i) => `${filePath}-${i}`),
@@ -30,7 +36,9 @@ async function addFileToCollection(filePath: string, collection: Collection) {
     console.log("error posting to chroma", e)
   }
 
-  console.info(`${filePath}: added ${chunks.length} chunks`)
+  console.info(
+    `4/4 - File ${filePath} has added ${chunks.length} chunks to the collection.`
+  )
   return {
     content,
     chunks,

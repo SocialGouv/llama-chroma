@@ -2,7 +2,7 @@
 
 #### Index data
 ```
-GET /api/indexing
+GET /api/indexing?collection=my_collection
 ```
 
 #### Get text embeddings
@@ -12,17 +12,17 @@ GET /api/embeddings?text=hello
 
 #### Get related data from query
 ```
-GET /api/query?text=hello
+GET /api/query?text=hello&collection=my_collection
 ```
 
 #### Get collection information
 ```
-GET /api/info
+GET /api/info?collection=my_collection
 ```
 
 #### Delete collection
 ```
-DELETE /api/collection
+DELETE /api/collection?collection=my_collection
 ```
 
 ## Development
@@ -34,6 +34,7 @@ Add a `.env` like so:
 ```shell
 DIRECTORY_PATH=./data
 LLAMA_MODEL=./model.bin
+DEFAULT_COLLECTION=default
 CHROMA_URL=http://localhost:8000
 ```
 

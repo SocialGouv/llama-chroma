@@ -13,8 +13,13 @@ export default async function Query(
   request: FastifyRequest,
   reply: FastifyReply
 ) {
-  const collection = await client.getCollection("test-collection")
-  const { text } = request.query as Record<string, string>
+  const { text, collection: collectionName } = request.query as Record<
+    string,
+    string
+  >
+  const collection = await client.getCollection(
+    collectionName || process.env.DEFAULT_COLLECTION || ""
+  )
   const embeddings = await getEmbeddings(text)
   const result = collection.query(embeddings, 5, undefined, [text])
   reply.send({ result })

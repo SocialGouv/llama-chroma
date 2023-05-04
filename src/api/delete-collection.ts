@@ -8,9 +8,12 @@ if (!process.env.CHROMA_URL) {
 const client = new ChromaClient(process.env.CHROMA_URL)
 
 export default async function DeleteCollection(
-  _request: FastifyRequest,
+  request: FastifyRequest,
   reply: FastifyReply
 ) {
-  await client.deleteCollection("test-collection")
+  const { collection: collectionName } = request.query as Record<string, string>
+  await client.deleteCollection(
+    collectionName || process.env.DEFAULT_COLLECTION || ""
+  )
   reply.send({ success: true })
 }

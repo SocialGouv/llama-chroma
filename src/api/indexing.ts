@@ -1,5 +1,5 @@
 import * as fs from "fs"
-import { ChromaClient } from "chromadb"
+import { ChromaClient, type Collection } from "chromadb"
 import type { FastifyRequest, FastifyReply } from "fastify"
 
 import { getEmbeddings } from "../lib/llama"
@@ -12,8 +12,7 @@ if (!process.env.CHROMA_URL) {
 
 const client = new ChromaClient(process.env.CHROMA_URL)
 
-async function addFileToCollection(filePath: string) {
-  const collection = await client.getOrCreateCollection("test-collection")
+async function addFileToCollection(filePath: string, collection: Collection) {
   const content = fs.readFileSync(filePath).toString()
   const chunks = markdownSplitter(content)
   const embeddings = await Promise.all(
@@ -39,9 +38,10 @@ async function addFileToCollection(filePath: string) {
   }
 }
 
-async function addFilesToCollection(files: string[]) {
+async function addFilesToCollection(files: string[], collectionName: string) {
+  const collection = await client.getOrCreateCollection(collectionName)
   for (const file of files) {
-    await addFileToCollection(file)
+    await addFileToCollection(file, collection)
   }
 }
 
@@ -53,11 +53,15 @@ function getFiles() {
 }
 
 export default async function Indexing(
-  _request: FastifyRequest,
+  request: FastifyRequest,
   reply: FastifyReply
 ) {
   const files = await getFiles()
   console.log("files", files)
-  await addFilesToCollection(files)
+  const { collection: collectionName } = request.query as Record<string, string>
+  await addFilesToCollection(
+    files,
+    collectionName || process.env.DEFAULT_COLLECTION || ""
+  )
   reply.send({ indexedFiles: files.length })
 }

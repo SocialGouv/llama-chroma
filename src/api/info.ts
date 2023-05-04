@@ -8,11 +8,14 @@ if (!process.env.CHROMA_URL) {
 const client = new ChromaClient(process.env.CHROMA_URL)
 
 export default async function Info(
-  _request: FastifyRequest,
+  request: FastifyRequest,
   reply: FastifyReply
 ) {
-  const collection = await client.getCollection("test-collection")
-  console.log("collection:", collection)
+  const { collection: collectionName } = request.query as Record<string, string>
+  const collection = await client.getCollection(
+    collectionName || process.env.DEFAULT_COLLECTION || ""
+  )
+
   try {
     const data = await collection.peek()
     const count = await collection.count()

@@ -24,6 +24,7 @@ services:
       CHROMA_URL: ${CHROMA_URL}
       LLAMA_MODEL: ${LLAMA_MODEL}
       DIRECTORY_PATH: ${DIRECTORY_PATH}
+      DEFAULT_COLLECTION: ${DEFAULT_COLLECTION}
     volumes:
       - ../goinfre:/goinfre
     ports:

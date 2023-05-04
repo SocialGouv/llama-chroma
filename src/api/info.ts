@@ -1,4 +1,5 @@
 import { ChromaClient } from "chromadb"
+import { RequiredError } from "chromadb/dist/main/generated/base"
 import type { FastifyRequest, FastifyReply } from "fastify"
 
 if (!process.env.CHROMA_URL) {
@@ -12,6 +13,14 @@ export default async function Info(
   reply: FastifyReply
 ) {
   const { collection: collectionName } = request.query as Record<string, string>
+
+  console.log(
+    "collectionName",
+    collectionName,
+    process.env.DEFAULT_COLLECTION,
+    collectionName || process.env.DEFAULT_COLLECTION || ""
+  )
+
   const collection = await client.getCollection(
     collectionName || process.env.DEFAULT_COLLECTION || ""
   )
@@ -21,6 +30,7 @@ export default async function Info(
     const count = await collection.count()
     return reply.send({ data, count })
   } catch (error) {
-    return reply.send({ error })
+    const { message } = error as RequiredError
+    throw new Error(message)
   }
 }

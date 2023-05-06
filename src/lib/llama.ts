@@ -30,7 +30,7 @@ llama.load(config)
 
 export async function getEmbeddings(prompt: string) {
   const params = {
-    nThreads: 4,
+    nThreads: 8,
     nTokPredict: 2048,
     topK: 40,
     topP: 0.1,

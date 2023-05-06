@@ -11,9 +11,12 @@ export default async function DeleteCollection(
   request: FastifyRequest,
   reply: FastifyReply
 ) {
-  const { collection: collectionName } = request.query as Record<string, string>
-  await client.deleteCollection(
-    collectionName || process.env.DEFAULT_COLLECTION || ""
-  )
-  reply.send({ success: true })
+  const { name } = request.query as Record<string, string>
+  try {
+    await client.deleteCollection(name)
+    reply.send({ success: true })
+  } catch (error) {
+    console.log("DeleteCollection:", error)
+    reply.send({ success: false })
+  }
 }

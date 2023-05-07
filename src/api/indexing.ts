@@ -12,16 +12,29 @@ if (!process.env.CHROMA_URL) {
 
 const client = new ChromaClient(process.env.CHROMA_URL)
 
-async function addFileToCollection(filePath: string, collection: Collection) {
+async function addFileToCollection(
+  filePath: string,
+  collection: Collection,
+  collectionName: string
+) {
   console.log(`1/4 - Start processing file"${filePath}"`)
   const content = fs.readFileSync(filePath).toString()
   const chunks = markdownSplitter(content)
   console.log(
     `2/4 - File "${filePath}" has been splitted in ${chunks.length} chunks.`
   )
-  const embeddings = await Promise.all(
-    chunks.map((chunk) => getEmbeddings(chunk.content))
-  )
+
+  const embeddings = []
+  for (const [i, chunk] of chunks.entries()) {
+    console.time("embeddings")
+    console.log(`---> chunk ${i}:`, chunk.type, chunk.content)
+    const chunkEmbeddings = await getEmbeddings(chunk.content)
+    console.timeEnd("embeddings")
+    embeddings.push(chunkEmbeddings)
+  }
+  // const embeddings = await Promise.all(
+  //   chunks.map((chunk) => getEmbeddings(chunk.content))
+  // )
   console.log(
     `3/4 - File "${filePath}" has generated ${embeddings.length} embeddings.`
   )
@@ -37,8 +50,9 @@ async function addFileToCollection(filePath: string, collection: Collection) {
   }
 
   console.info(
-    `4/4 - File ${filePath} has added ${chunks.length} chunks to the collection.`
+    `4/4 - File "${filePath}" has added ${chunks.length} chunks to the collection "${collectionName}".`
   )
+
   return {
     content,
     chunks,
@@ -49,7 +63,7 @@ async function addFileToCollection(filePath: string, collection: Collection) {
 async function addFilesToCollection(files: string[], collectionName: string) {
   const collection = await client.getOrCreateCollection(collectionName)
   for (const file of files) {
-    await addFileToCollection(file, collection)
+    await addFileToCollection(file, collection, collectionName)
   }
 }
 

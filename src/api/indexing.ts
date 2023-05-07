@@ -27,21 +27,18 @@ async function addFileToCollection(
   const embeddings = []
   for (const [i, chunk] of chunks.entries()) {
     console.time("embeddings")
-    console.log(`---> chunk ${i}:`, chunk.type, chunk.content)
-    const chunkEmbeddings = await getEmbeddings(chunk.content)
+    console.log(`---> chunk ${i} (${chunk.length} characters):`, chunk)
+    const chunkEmbeddings = await getEmbeddings(chunk)
     console.timeEnd("embeddings")
     embeddings.push(chunkEmbeddings)
   }
-  // const embeddings = await Promise.all(
-  //   chunks.map((chunk) => getEmbeddings(chunk.content))
-  // )
   console.log(
     `3/4 - File "${filePath}" has generated ${embeddings.length} embeddings.`
   )
 
-  const documents = chunks.map((file) => file.content)
+  const documents = chunks.map((file) => file)
   const ids = chunks.map((_file, i) => `${filePath}-${i}`)
-  const metadata = chunks.map((file) => ({ path: filePath, type: file.type }))
+  const metadata = chunks.map(() => ({ path: filePath }))
 
   try {
     await collection.add(ids, embeddings, metadata, documents)

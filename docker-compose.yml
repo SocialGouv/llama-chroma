@@ -21,6 +21,7 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
+      N_THREADS: ${N_THREADS}
       CHROMA_URL: ${CHROMA_URL}
       LLAMA_MODEL: ${LLAMA_MODEL}
       DIRECTORY_PATH: ${DIRECTORY_PATH}
